@@ -1,0 +1,7 @@
+{
+  "manifest_version": 2,
+
+  "name": "Chrome alone",
+  "description": "This extension hides pictures of couples being happy and shit",
+  "version": "0.1"
+}
