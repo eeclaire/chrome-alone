@@ -7,7 +7,7 @@ var srcList = [];
 var imtags = [];
 for (var i = 0; i < images.length; i++) {
     srcList.push(images[i].src);
-    imtags = requestTags(images[i].src);
+    imtags = requestTags(images[i]);
 }
 
 console.log(srcList); 
@@ -65,10 +65,23 @@ function useToken(accessToken, imgurl) {
         'type': 'POST',
         success: function (response) {
             console.log("Obtained response from Clarifai");
-            return parseResponse(response, imgurl);
-
+            var tags = parseResponse(response, imgurl);
+            var corgiImg = getCorgi(imgurl);
         }
     });
+}
+
+function getCorgi(imgurl) {
+
+    $.ajax({
+        'url':" http://corginator.herokuapp.com/random",
+        'type': 'GET',
+        success: function (response) {
+                corgiImg =  response.corgi;
+                console.log(corgiImg);
+                setTimeout(function() {imgurl.src = corgiImg}, 200);
+            }
+        })
 }
 
 // Parse the returned response
