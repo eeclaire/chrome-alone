@@ -10,7 +10,12 @@
           "matches":[
               "<all_urls>"
           ],
-          "js":["popup.js"]
+          "js":[
+              "jquery-2.2.2.min.js",
+              "keys.js",
+              "clarifai.js",
+              "popup.js"
+              ]
           }
       ]
 }
