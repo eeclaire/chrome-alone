@@ -1,3 +1,4 @@
+/*<<<<<<< Updated upstream
 var images = document.getElementsByTagName('img');
 var srcList = [];
 for (var i = 0; i < images.length; i++) {
@@ -7,3 +8,5 @@ for (var i = 0; i < images.length; i++) {
 }
 
 console.log(srcList); 
+=======
+>>>>>>> Stashed changes*/

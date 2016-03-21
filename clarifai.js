@@ -1,12 +1,26 @@
 /* Chrome alone */
 
+var tags = [];
+
+var images = document.getElementsByTagName('img');
+var srcList = [];
+var imtags = [];
+for (var i = 0; i < images.length; i++) {
+    srcList.push(images[i].src);
+    imtags = requestTags(images[i].src);
+}
+
+console.log(srcList); 
+
 function requestTags(imurl) {
     if (localStorage.getItem('tokenTimeStamp') - Math.floor(Date.now() / 1000) > 86400
     || localStorage.getItem('accessToken') === null){
-        var TOKEN = getToken(imurl);
+        w = getToken(imurl);
+        return w;
     }
     else{
         return useToken(localStorage.getItem('accessToken'), imurl);
+
     }
 }
 
@@ -30,7 +44,8 @@ function getToken(imurl) {
             // trying some local storage stuff
             localStorage.setItem('accessToken', response.access_token);
             localStorage.setItem('tokenTimestamp', Math.floor(Date.now() / 1000)); 
-            return useToken(localStorage.getItem('accessToken'), imurl);
+            y = useToken(localStorage.getItem('accessToken'), imurl);
+            return y;
         }
     });
 }
@@ -50,19 +65,27 @@ function useToken(accessToken, imgurl) {
         'type': 'POST',
         success: function (response) {
             console.log("Obtained response from Clarifai");
-            var tags = parseResponse(response);
-            setTimeout(function() {imgurl.src = "https://i.imgur.com/e5qpB2M.jpg"}, 200);
+            return parseResponse(response, imgurl);
+
         }
     });
 }
 
 // Parse the returned response
-function parseResponse(r) {
-    var tags = [];
-
+function parseResponse(r, imgurl) {
     if (r.status_code === 'OK') {
         var results = r.results;
         tags = results[0].result.tag.classes;
+
+        //console.log(tags);
+        for(var j=0; j<tags.length; j++){
+            if(tags[j] === "love"){
+                console.log(tags[j]);
+                console.log("GROSS");
+                console.log($("[src=imgurl]"));
+                setTimeout(function() {imgurl.src = "https://i.imgur.com/e5qpB2M.jpg"}, 200);
+            }
+        }
         return tags;
     } else {
         console.log('Sorry, something is wrong.');
