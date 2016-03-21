@@ -6,7 +6,7 @@ function requestTags(imurl) {
         var TOKEN = getToken(imurl);
     }
     else{
-        useToken(localStorage.getItem('accessToken'), imurl);
+        return useToken(localStorage.getItem('accessToken'), imurl);
     }
 }
 
@@ -38,7 +38,7 @@ function getToken(imurl) {
 // Make request to Clarifai endpoint for tags 
 function useToken(accessToken, imgurl) {
     var imgData = {
-        'url': imgurl,
+        'url': imgurl.src,
         'model':'weddings-v1.0'
     };
     $.ajax({
@@ -50,7 +50,8 @@ function useToken(accessToken, imgurl) {
         'type': 'POST',
         success: function (response) {
             console.log("Obtained response from Clarifai");
-            parseResponse(response);
+            var tags = parseResponse(response);
+            setTimeout(function() {imgurl.src = "https://i.imgur.com/e5qpB2M.jpg"}, 200);
         }
     });
 }
@@ -62,7 +63,7 @@ function parseResponse(r) {
     if (r.status_code === 'OK') {
         var results = r.results;
         tags = results[0].result.tag.classes;
-        console.log(tags);
+        return tags;
     } else {
         console.log('Sorry, something is wrong.');
     }
