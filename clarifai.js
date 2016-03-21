@@ -44,8 +44,7 @@ function getToken(imurl) {
             // trying some local storage stuff
             localStorage.setItem('accessToken', response.access_token);
             localStorage.setItem('tokenTimestamp', Math.floor(Date.now() / 1000)); 
-            y = useToken(localStorage.getItem('accessToken'), imurl);
-            return y;
+            return useToken(localStorage.getItem('accessToken'), imurl);
         }
     });
 }
@@ -53,8 +52,8 @@ function getToken(imurl) {
 // Make request to Clarifai endpoint for tags 
 function useToken(accessToken, imgurl) {
     var imgData = {
-        'url': imgurl.src,
-        'model':'weddings-v1.0'
+        'url': imgurl.src
+        //'model':'weddings-v1.0'
     };
     $.ajax({
         'url': 'https://api.clarifai.com/v1/tag?model=weddings-v1.0',
@@ -74,14 +73,14 @@ function useToken(accessToken, imgurl) {
 function getCorgi(imgurl) {
 
     $.ajax({
-        'url':" http://corginator.herokuapp.com/random",
+        'url':" https://corginator.herokuapp.com/random",
         'type': 'GET',
         success: function (response) {
                 corgiImg =  response.corgi;
                 console.log(corgiImg);
                 setTimeout(function() {imgurl.src = corgiImg}, 200);
             }
-        })
+        });
 }
 
 // Parse the returned response
@@ -89,14 +88,24 @@ function parseResponse(r, imgurl) {
     if (r.status_code === 'OK') {
         var results = r.results;
         tags = results[0].result.tag.classes;
+        console.log(tags);
 
         //console.log(tags);
         for(var j=0; j<tags.length; j++){
-            if(tags[j] === "love"){
+            if(tags[j] === "love" || tags[j] === "bride" || tags[j] === "kiss" 
+                    || tags[j] === "bridesmaids" || tags[j] === "groom" || 
+                    tags[j] === "party" || tags[j] === "crowd" || 
+                    tags[j] === "wedding" || tags[j] === "celebration" || 
+                    tags[j] === "event" || tags[j] === "ceremony" || 
+                    tags[j] === "marriage" || tags[j] === "newlywed" ||
+                    tags[j] === "bridal" || tags[j] === "romance" ||
+                    tags[j] === "couple" || tags[j] === "engagement" ||
+                    tags[j] === "veil"
+                    ){
                 console.log(tags[j]);
                 console.log("GROSS");
                 console.log($("[src=imgurl]"));
-                setTimeout(function() {imgurl.src = "https://i.imgur.com/e5qpB2M.jpg"}, 200);
+                getCorgi(imgurl);
             }
         }
         return tags;
